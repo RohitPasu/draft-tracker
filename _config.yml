@@ -1,0 +1,14 @@
+baseurl: "/draft-tracker"
+url: "https://rohitpasu.github.io"
+
+# Exclude development files
+exclude:
+  - node_modules
+  - src
+  - public
+  - package.json
+  - package-lock.json
+  - README.md
+  - vite.config.ts
+  - tsconfig.json
+  - .gitignore 
