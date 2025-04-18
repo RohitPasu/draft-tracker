@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -16,7 +15,7 @@ import {
   SelectChangeEvent,
   Stack
 } from '@mui/material';
-import { DraftPick, Player } from '../types/draft';
+import { DraftPick } from '../types/draft';
 import { PROSPECTS, Prospect } from './BigBoard';
 
 // List of NFL teams
@@ -27,13 +26,12 @@ const NFL_TEAMS = [
 ];
 
 // List of positions
-const POSITIONS = [
-  'QB', 'RB', 'WR', 'TE', 'OT', 'OG', 'C', 'DT', 'DE', 'LB',
-  'CB', 'S', 'K', 'P', 'LS', 'EDGE'
-];
+// const POSITIONS = [
+//   'QB', 'RB', 'WR', 'TE', 'OT', 'OG', 'C', 'DT', 'DE', 'LB',
+//   'CB', 'S', 'K', 'P', 'LS', 'EDGE'
+// ];
 
 const AddPick = () => {
-  const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
@@ -166,7 +164,7 @@ const AddPick = () => {
                 labelId="team-label"
                 name="team"
                 value={formData.team || ''}
-                onChange={handleChange as any}
+                onChange={handleChange as unknown}
                 label="Team"
               >
                 {NFL_TEAMS.map((team) => (

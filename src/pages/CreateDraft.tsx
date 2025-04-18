@@ -18,10 +18,10 @@ const NFL_TEAMS = [
   'MIN', 'NE', 'NO', 'NYG', 'NYJ', 'PHI', 'PIT', 'SEA', 'SF', 'TB', 'TEN', 'WAS'
 ];
 
-const POSITIONS = [
-  'QB', 'RB', 'WR', 'TE', 'OT', 'OG', 'C', 'DT', 'DE', 'LB',
-  'CB', 'S', 'K', 'P', 'LS'
-];
+// const POSITIONS = [
+//   'QB', 'RB', 'WR', 'TE', 'OT', 'OG', 'C', 'DT', 'DE', 'LB',
+//   'CB', 'S', 'K', 'P', 'LS'
+// ];
 
 const CreateDraft = () => {
   const [formData, setFormData] = useState<Partial<DraftPick>>({

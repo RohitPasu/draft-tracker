@@ -17,7 +17,7 @@ const POSITIONS = [
 
 const Dashboard = () => {
   const [draftRounds, setDraftRounds] = useState<DraftRound[]>([]);
-  const [currentRound, setCurrentRound] = useState<number>(1);
+  const [currentRound] = useState<number>(1);
   const [selectedRound, setSelectedRound] = useState<number | 'all'>('all');
   const [selectedTeam, setSelectedTeam] = useState<string>('all');
   const [selectedPosition, setSelectedPosition] = useState<string>('all');
@@ -633,15 +633,15 @@ const Dashboard = () => {
       return true;
     });
 
-  const handleRoundChange = (event: any) => {
+  const handleRoundChange = (event: unknown) => {
     setSelectedRound(event.target.value);
   };
 
-  const handleTeamChange = (event: any) => {
+  const handleTeamChange = (event: unknown) => {
     setSelectedTeam(event.target.value);
   };
 
-  const handlePositionChange = (event: any) => {
+  const handlePositionChange = (event: unknown) => {
     setSelectedPosition(event.target.value);
   };
 

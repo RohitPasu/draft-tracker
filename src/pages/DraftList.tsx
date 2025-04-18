@@ -12,7 +12,7 @@ import {
   Box,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { DraftPick, DraftRound } from '../types/draft';
+import { DraftRound } from '../types/draft';
 
 const DraftList = () => {
   const [draftRounds, setDraftRounds] = useState<DraftRound[]>([]);

@@ -4606,7 +4606,7 @@ const BigBoard = () => {
   const [selectedGrade, setSelectedGrade] = useState('all');
   const [selectedRound, setSelectedRound] = useState('all');
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
@@ -4620,17 +4620,17 @@ const BigBoard = () => {
     setPage(0);
   };
 
-  const handlePositionChange = (event: any) => {
+  const handlePositionChange = (event: unknown) => {
     setSelectedPosition(event.target.value);
     setPage(0);
   };
 
-  const handleGradeChange = (event: any) => {
+  const handleGradeChange = (event: unknown) => {
     setSelectedGrade(event.target.value);
     setPage(0);
   };
 
-  const handleRoundChange = (event: any) => {
+  const handleRoundChange = (event: unknown) => {
     setSelectedRound(event.target.value);
     setPage(0);
   };

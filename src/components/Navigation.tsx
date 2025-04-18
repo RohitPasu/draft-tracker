@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { 
   AppBar, 
   Toolbar, 
-  Button, 
   Box, 
   Tabs, 
   Tab, 
@@ -14,12 +13,9 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import AddIcon from '@mui/icons-material/Add';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -30,7 +26,7 @@ const Navigation = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     navigate(newValue);
     setDrawerOpen(false);
   };
@@ -115,7 +111,7 @@ const Navigation = () => {
             {menuItems.map((item) => (
               <ListItemButton 
                 key={item.path} 
-                onClick={() => handleTabChange(null as any, item.path)}
+                onClick={() => handleTabChange(null as unknown, item.path)}
                 selected={location.pathname === item.path}
                 disableRipple
                 sx={{
