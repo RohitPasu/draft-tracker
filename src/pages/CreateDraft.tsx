@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { DraftPick, Player } from '../types/draft';
-import { PROSPECTS, Prospect } from '../data/prospects';
+import { PROSPECTS, Prospect } from './BigBoard';
 
 const NFL_TEAMS = [
   'ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE', 'DAL', 'DEN',

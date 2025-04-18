@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import Dashboard from './pages/Dashboard';
@@ -28,7 +28,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router basename="/draft-tracker">
+      <Router>
         <div className="App">
           <Navigation />
           <Box sx={{ pt: '1in' }}>
@@ -38,8 +38,6 @@ function App() {
               <Route path="/create" element={<CreateDraft />} />
               <Route path="/bigboard" element={<BigBoard />} />
               <Route path="/addpick" element={<AddPick />} />
-              {/* Redirect from root to /draft-tracker/ */}
-              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Box>
         </div>

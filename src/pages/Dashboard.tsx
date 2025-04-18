@@ -1,7 +1,6 @@
 import { Container, Typography, Paper, Box, Chip, Stack, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { DraftPick, DraftRound } from '../types/draft';
-import { getDraftPicks } from '../services/draftService';
 
 // List of NFL teams for the filter
 const NFL_TEAMS = [
@@ -23,10 +22,9 @@ const Dashboard = () => {
   const [selectedTeam, setSelectedTeam] = useState<string>('all');
   const [selectedPosition, setSelectedPosition] = useState<string>('all');
 
-  // Function to load and process draft picks
-  const loadDraftPicks = () => {
-    // Load picks from the service
-    const savedPicks = getDraftPicks();
+  useEffect(() => {
+    // Load picks from localStorage
+    const savedPicks = JSON.parse(localStorage.getItem('draftPicks') || '[]');
     
     if (savedPicks.length > 0) {
       // Group picks by round
@@ -610,23 +608,6 @@ const Dashboard = () => {
         }
       ]);
     }
-  };
-
-  useEffect(() => {
-    // Load picks on initial render
-    loadDraftPicks();
-    
-    // Listen for updates to draft picks
-    const handleDraftPicksUpdated = () => {
-      loadDraftPicks();
-    };
-    
-    window.addEventListener('draftPicksUpdated', handleDraftPicksUpdated);
-    
-    // Clean up event listener
-    return () => {
-      window.removeEventListener('draftPicksUpdated', handleDraftPicksUpdated);
-    };
   }, []);
 
   const totalPicks = draftRounds.reduce((acc, round) => acc + round.picks.length, 0);
@@ -788,6 +769,23 @@ const Dashboard = () => {
                 </Typography>
               )}
             </Box>
+          </Paper>
+        </Box>
+        
+        <Box sx={{ width: '100%', maxWidth: '600px' }}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Draft Status
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Current Round: {currentRound}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Total Picks: {totalPicks}
+            </Typography>
+            <Typography variant="body1">
+              Picks in Current Round: {draftRounds.find(r => r.round === currentRound)?.picks.length || 0}
+            </Typography>
           </Paper>
         </Box>
       </Stack>
