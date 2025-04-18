@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -13,10 +13,19 @@ import {
   Snackbar,
   Alert,
   SelectChangeEvent,
-  Stack
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton
 } from '@mui/material';
 import { DraftPick } from '../types/draft';
-import { PROSPECTS, Prospect } from './BigBoard';
+import { PROSPECTS, Prospect } from '../data/prospects';
+import { addDraftPick, getDraftPicks, deleteDraftPick } from '../services/draftService';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // List of NFL teams
 const NFL_TEAMS = [
@@ -50,6 +59,35 @@ const AddPick = () => {
       age: 0
     }
   });
+  const [currentPicks, setCurrentPicks] = useState<DraftPick[]>([]);
+
+  // Load current picks when component mounts
+  useEffect(() => {
+    loadCurrentPicks();
+    
+    // Listen for updates to draft picks
+    const handleDraftPicksUpdated = () => {
+      loadCurrentPicks();
+    };
+    
+    window.addEventListener('draftPicksUpdated', handleDraftPicksUpdated);
+    
+    return () => {
+      window.removeEventListener('draftPicksUpdated', handleDraftPicksUpdated);
+    };
+  }, []);
+
+  const loadCurrentPicks = () => {
+    const picks = getDraftPicks();
+    setCurrentPicks(picks);
+  };
+
+  const handleDeletePick = (pickId: string) => {
+    deleteDraftPick(pickId);
+    setSnackbarMessage('Pick removed successfully');
+    setSnackbarSeverity('success');
+    setOpenSnackbar(true);
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -91,14 +129,8 @@ const AddPick = () => {
       timestamp: new Date().toISOString()
     };
     
-    // Get existing picks from localStorage
-    const existingPicks = JSON.parse(localStorage.getItem('draftPicks') || '[]');
-    
-    // Add the new pick
-    const updatedPicks = [...existingPicks, newPick];
-    
-    // Save to localStorage
-    localStorage.setItem('draftPicks', JSON.stringify(updatedPicks));
+    // Use the service to add the pick
+    addDraftPick(newPick);
     
     // Show success message
     setSnackbarMessage('Pick added successfully!');
@@ -238,6 +270,53 @@ const AddPick = () => {
           </Stack>
         </form>
       </Paper>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Current Draft Picks
+      </Typography>
+      
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Round</TableCell>
+              <TableCell>Pick</TableCell>
+              <TableCell>Team</TableCell>
+              <TableCell>Player</TableCell>
+              <TableCell>Position</TableCell>
+              <TableCell>College</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {currentPicks.map((pick) => (
+              <TableRow key={pick.id}>
+                <TableCell>{pick.round}</TableCell>
+                <TableCell>{pick.pick}</TableCell>
+                <TableCell>{pick.team}</TableCell>
+                <TableCell>{pick.player.name}</TableCell>
+                <TableCell>{pick.player.position}</TableCell>
+                <TableCell>{pick.player.college}</TableCell>
+                <TableCell>
+                  <IconButton 
+                    onClick={() => handleDeletePick(pick.id)}
+                    color="error"
+                    size="small"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+            {currentPicks.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  No draft picks added yet
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Snackbar 
         open={openSnackbar} 
         autoHideDuration={6000} 
