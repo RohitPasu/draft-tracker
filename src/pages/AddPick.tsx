@@ -51,7 +51,7 @@ const AddPick = () => {
     }
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -164,7 +164,7 @@ const AddPick = () => {
                 labelId="team-label"
                 name="team"
                 value={formData.team || ''}
-                onChange={handleChange as unknown}
+                onChange={handleChange}
                 label="Team"
               >
                 {NFL_TEAMS.map((team) => (

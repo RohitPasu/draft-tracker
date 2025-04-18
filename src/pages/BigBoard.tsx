@@ -4620,17 +4620,17 @@ const BigBoard = () => {
     setPage(0);
   };
 
-  const handlePositionChange = (event: unknown) => {
+  const handlePositionChange = (event: any) => {
     setSelectedPosition(event.target.value);
     setPage(0);
   };
 
-  const handleGradeChange = (event: unknown) => {
+  const handleGradeChange = (event: any) => {
     setSelectedGrade(event.target.value);
     setPage(0);
   };
 
-  const handleRoundChange = (event: unknown) => {
+  const handleRoundChange = (event: any) => {
     setSelectedRound(event.target.value);
     setPage(0);
   };

@@ -633,15 +633,15 @@ const Dashboard = () => {
       return true;
     });
 
-  const handleRoundChange = (event: unknown) => {
+  const handleRoundChange = (event: any) => {
     setSelectedRound(event.target.value);
   };
 
-  const handleTeamChange = (event: unknown) => {
+  const handleTeamChange = (event: any) => {
     setSelectedTeam(event.target.value);
   };
 
-  const handlePositionChange = (event: unknown) => {
+  const handlePositionChange = (event: any) => {
     setSelectedPosition(event.target.value);
   };
 
