@@ -28,7 +28,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router basename="/draft-tracker">
+      <Router>
         <div className="App">
           <Navigation />
           <Box sx={{ pt: '1in' }}>
