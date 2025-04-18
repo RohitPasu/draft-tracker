@@ -17,7 +17,6 @@ import {
   Stack,
   InputAdornment,
   TablePagination,
-  Box,
   Chip,
 } from '@mui/material';
 import { PROSPECTS } from '../data/prospects';
@@ -64,7 +63,7 @@ const BigBoard = () => {
     setPage(0);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
@@ -201,21 +200,15 @@ const BigBoard = () => {
                     <TableCell>{prospect.weight}</TableCell>
                     <TableCell>{prospect.age}</TableCell>
                     <TableCell>
-                      <Box
+                      <Chip
+                        label={prospect.grade}
+                        size="small"
                         sx={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: 32,
-                          height: 32,
-                          borderRadius: '50%',
                           backgroundColor: GRADE_COLORS[prospect.grade as keyof typeof GRADE_COLORS] || '#9E9E9E',
                           color: 'white',
                           fontWeight: 'bold',
                         }}
-                      >
-                        {prospect.grade}
-                      </Box>
+                      />
                     </TableCell>
                     <TableCell>{prospect.projectedPick}</TableCell>
                     <TableCell>{prospect.notes || ''}</TableCell>
