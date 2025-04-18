@@ -18,6 +18,7 @@ const POSITIONS = [
 
 const Dashboard = () => {
   const [draftRounds, setDraftRounds] = useState<DraftRound[]>([]);
+  const [currentRound] = useState<number>(1);
   const [selectedRound, setSelectedRound] = useState<number | 'all'>('all');
   const [selectedTeam, setSelectedTeam] = useState<string>('all');
   const [selectedPosition, setSelectedPosition] = useState<string>('all');
@@ -628,7 +629,7 @@ const Dashboard = () => {
     };
   }, []);
 
-  // const totalPicks = draftRounds.reduce((acc, round) => acc + round.picks.length, 0);
+  const totalPicks = draftRounds.reduce((acc, round) => acc + round.picks.length, 0);
   
   // Filter picks based on selected round, team, and position
   const filteredPicks = draftRounds.flatMap(round => round.picks)

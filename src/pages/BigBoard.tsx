@@ -20,7 +20,7 @@ import {
   Stack
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { PROSPECTS } from "../data/prospects";
+import { PROSPECTS, Prospect } from "../data/prospects";
 
 // List of positions for the filter
 const POSITIONS = [
