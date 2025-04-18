@@ -37,6 +37,7 @@ const Navigation = () => {
     if (path === '/drafts') return '/drafts';
     if (path === '/create') return '/create';
     if (path === '/bigboard') return '/bigboard';
+    if (path === '/addpick') return '/addpick';
     return '/';
   };
 

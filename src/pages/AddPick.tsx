@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -13,10 +13,18 @@ import {
   Snackbar,
   Alert,
   SelectChangeEvent,
-  Stack
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { DraftPick } from '../types/draft';
-import { PROSPECTS, Prospect } from './BigBoard';
+import { PROSPECTS, Prospect } from '../data/prospects';
 
 // List of NFL teams
 const NFL_TEAMS = [
@@ -35,6 +43,7 @@ const AddPick = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [existingPicks, setExistingPicks] = useState<DraftPick[]>([]);
   
   const [formData, setFormData] = useState<Partial<DraftPick>>({
     round: 1,
@@ -50,6 +59,12 @@ const AddPick = () => {
       age: 0
     }
   });
+
+  useEffect(() => {
+    // Load existing picks when component mounts
+    const picks = JSON.parse(localStorage.getItem('draftPicks') || '[]');
+    setExistingPicks(picks);
+  }, []);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -68,6 +83,15 @@ const AddPick = () => {
         player: selectedPlayer
       }));
     }
+  };
+
+  const handleRemovePick = (pickId: string) => {
+    const updatedPicks = existingPicks.filter(pick => pick.id !== pickId);
+    localStorage.setItem('draftPicks', JSON.stringify(updatedPicks));
+    setExistingPicks(updatedPicks);
+    setSnackbarMessage('Pick removed successfully!');
+    setSnackbarSeverity('success');
+    setOpenSnackbar(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -91,14 +115,12 @@ const AddPick = () => {
       timestamp: new Date().toISOString()
     };
     
-    // Get existing picks from localStorage
-    const existingPicks = JSON.parse(localStorage.getItem('draftPicks') || '[]');
-    
     // Add the new pick
     const updatedPicks = [...existingPicks, newPick];
     
     // Save to localStorage
     localStorage.setItem('draftPicks', JSON.stringify(updatedPicks));
+    setExistingPicks(updatedPicks);
     
     // Show success message
     setSnackbarMessage('Pick added successfully!');
@@ -120,8 +142,6 @@ const AddPick = () => {
         age: 0
       }
     }));
-    
-    // Don't navigate away - stay on the page
   };
 
   const handleCloseSnackbar = () => {
@@ -131,9 +151,57 @@ const AddPick = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Add Draft Pick
+        Manage Draft Picks
       </Typography>
+      
+      {/* Existing Picks Table */}
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          Existing Picks
+        </Typography>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Round</TableCell>
+                <TableCell>Pick</TableCell>
+                <TableCell>Team</TableCell>
+                <TableCell>Player</TableCell>
+                <TableCell>Position</TableCell>
+                <TableCell>College</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {existingPicks.map((pick) => (
+                <TableRow key={pick.id}>
+                  <TableCell>{pick.round}</TableCell>
+                  <TableCell>{pick.pick}</TableCell>
+                  <TableCell>{pick.team}</TableCell>
+                  <TableCell>{pick.player.name}</TableCell>
+                  <TableCell>{pick.player.position}</TableCell>
+                  <TableCell>{pick.player.college}</TableCell>
+                  <TableCell>
+                    <IconButton 
+                      color="error" 
+                      onClick={() => handleRemovePick(pick.id)}
+                      size="small"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+
+      {/* Add New Pick Form */}
       <Paper sx={{ p: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          Add New Pick
+        </Typography>
         <form onSubmit={handleSubmit}>
           <Stack spacing={3}>
             <Box sx={{ display: 'flex', gap: 2 }}>
@@ -238,6 +306,7 @@ const AddPick = () => {
           </Stack>
         </form>
       </Paper>
+
       <Snackbar 
         open={openSnackbar} 
         autoHideDuration={6000} 
