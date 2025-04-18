@@ -26,7 +26,7 @@ const Navigation = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
+  const handleTabChange = (_event: any, newValue: string) => {
     navigate(newValue);
     setDrawerOpen(false);
   };
@@ -111,7 +111,7 @@ const Navigation = () => {
             {menuItems.map((item) => (
               <ListItemButton 
                 key={item.path} 
-                onClick={() => handleTabChange(null as unknown, item.path)}
+                onClick={() => handleTabChange(null, item.path)}
                 selected={location.pathname === item.path}
                 disableRipple
                 sx={{
