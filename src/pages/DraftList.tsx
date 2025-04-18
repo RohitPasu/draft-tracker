@@ -28,33 +28,17 @@ const DraftList = () => {
             id: '1',
             round: 1,
             pick: 1,
-            team: 'CHI',
+            team: 'TEN',
             player: {
               id: '1',
-              name: 'Caleb Williams',
+              name: 'Cameron Ward',
               position: 'QB',
-              college: 'USC',
-              height: "6'1\"",
-              weight: '215',
+              college: 'Miami (FL)',
+              height: "6'2\"",
+              weight: '225',
               age: 22
             },
             timestamp: '2024-04-25T20:00:00Z'
-          },
-          {
-            id: '2',
-            round: 1,
-            pick: 2,
-            team: 'WAS',
-            player: {
-              id: '2',
-              name: 'Jayden Daniels',
-              position: 'QB',
-              college: 'LSU',
-              height: "6'4\"",
-              weight: '210',
-              age: 23
-            },
-            timestamp: '2024-04-25T20:15:00Z'
           }
         ]
       }

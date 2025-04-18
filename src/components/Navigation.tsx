@@ -32,7 +32,7 @@ const Navigation = () => {
   };
 
   const getCurrentTab = () => {
-    const path = location.pathname;
+    const path = location.pathname.replace(/^\/#/, '/');
     if (path === '/') return '/';
     if (path === '/drafts') return '/drafts';
     if (path === '/create') return '/create';
@@ -48,6 +48,9 @@ const Navigation = () => {
   const menuItems = [
     { path: '/', label: 'Dashboard', icon: <DashboardIcon /> },
     { path: '/bigboard', label: 'Big Board', icon: <AssessmentIcon /> },
+    { path: '/drafts', label: 'Drafts', icon: <AssessmentIcon /> },
+    { path: '/create', label: 'Create', icon: <AssessmentIcon /> },
+    { path: '/addpick', label: 'Add Pick', icon: <AssessmentIcon /> },
   ];
 
   return (

@@ -25,6 +25,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DraftPick } from '../types/draft';
 import { PROSPECTS, Prospect } from '../data/prospects';
+import { getDraftPicks, addDraftPick, deleteDraftPick } from '../services/draftService';
 
 // List of NFL teams
 const NFL_TEAMS = [
@@ -44,6 +45,8 @@ const AddPick = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   const [existingPicks, setExistingPicks] = useState<DraftPick[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   const [formData, setFormData] = useState<Partial<DraftPick>>({
     round: 1,
@@ -61,9 +64,21 @@ const AddPick = () => {
   });
 
   useEffect(() => {
-    // Load existing picks when component mounts
-    const picks = JSON.parse(localStorage.getItem('draftPicks') || '[]');
-    setExistingPicks(picks);
+    const loadExistingPicks = async () => {
+      try {
+        setLoading(true);
+        const picks = await getDraftPicks();
+        setExistingPicks(picks);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load draft picks');
+        console.error('Error loading draft picks:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadExistingPicks();
   }, []);
 
   const handleChange = (e: any) => {
@@ -85,63 +100,79 @@ const AddPick = () => {
     }
   };
 
-  const handleRemovePick = (pickId: string) => {
-    const updatedPicks = existingPicks.filter(pick => pick.id !== pickId);
-    localStorage.setItem('draftPicks', JSON.stringify(updatedPicks));
-    setExistingPicks(updatedPicks);
-    setSnackbarMessage('Pick removed successfully!');
-    setSnackbarSeverity('success');
-    setOpenSnackbar(true);
+  const handleRemovePick = async (pickId: string) => {
+    try {
+      console.log('Removing pick with ID:', pickId);
+      
+      if (!pickId) {
+        console.error('No ID provided for pick to remove');
+        setSnackbarMessage('Failed to remove pick: No ID provided');
+        setSnackbarSeverity('error');
+        setOpenSnackbar(true);
+        return;
+      }
+      
+      await deleteDraftPick(pickId);
+      setExistingPicks(prev => prev.filter(pick => pick.id !== pickId));
+      setSnackbarMessage('Pick removed successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    } catch (err) {
+      setSnackbarMessage('Failed to remove pick');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+      console.error('Error removing pick:', err);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Generate a unique ID for the pick
-    const newPick: DraftPick = {
-      id: Date.now().toString(),
-      round: Number(formData.round),
-      pick: Number(formData.pick),
-      team: formData.team || '',
-      player: {
-        id: formData.player?.id || Date.now().toString(),
-        name: formData.player?.name || '',
-        position: formData.player?.position || '',
-        college: formData.player?.college || '',
-        height: formData.player?.height || '',
-        weight: formData.player?.weight || '',
-        age: Number(formData.player?.age) || 0
-      },
-      timestamp: new Date().toISOString()
-    };
-    
-    // Add the new pick
-    const updatedPicks = [...existingPicks, newPick];
-    
-    // Save to localStorage
-    localStorage.setItem('draftPicks', JSON.stringify(updatedPicks));
-    setExistingPicks(updatedPicks);
-    
-    // Show success message
-    setSnackbarMessage('Pick added successfully!');
-    setSnackbarSeverity('success');
-    setOpenSnackbar(true);
-    
-    // Increment the pick number for the next selection
-    setFormData(prev => ({
-      ...prev,
-      pick: prev.pick ? prev.pick + 1 : 1,
-      team: '',
-      player: {
+    try {
+      const newPick: DraftPick = {
         id: '',
-        name: '',
-        position: '',
-        college: '',
-        height: '',
-        weight: '',
-        age: 0
-      }
-    }));
+        round: Number(formData.round),
+        pick: Number(formData.pick),
+        team: formData.team || '',
+        player: {
+          id: formData.player?.id || '',
+          name: formData.player?.name || '',
+          position: formData.player?.position || '',
+          college: formData.player?.college || '',
+          height: formData.player?.height || '',
+          weight: formData.player?.weight || '',
+          age: Number(formData.player?.age) || 0
+        },
+        timestamp: new Date().toISOString()
+      };
+      
+      const savedPick = await addDraftPick(newPick);
+      setExistingPicks(prev => [...prev, savedPick]);
+      
+      setSnackbarMessage('Pick added successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+      
+      setFormData(prev => ({
+        ...prev,
+        pick: prev.pick ? prev.pick + 1 : 1,
+        team: '',
+        player: {
+          id: '',
+          name: '',
+          position: '',
+          college: '',
+          height: '',
+          weight: '',
+          age: 0
+        }
+      }));
+    } catch (err) {
+      setSnackbarMessage('Failed to add pick');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+      console.error('Error adding pick:', err);
+    }
   };
 
   const handleCloseSnackbar = () => {
